@@ -1,0 +1,153 @@
+:root {
+  --color-fondo: #f4f6f8;
+  --color-texto: #1f2933;
+  --color-primario: #2563eb;
+  --color-primario-oscuro: #1d4ed8;
+  --color-borde: #d1d5db;
+  --color-peligro: #dc2626;
+  --color-exito: #16a34a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  background: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+header {
+  background: var(--color-primario);
+  color: #fff;
+  padding: 1.25rem 1.5rem;
+}
+
+header h1 {
+  margin: 0 0 0.25rem;
+}
+
+main {
+  display: grid;
+  grid-template-columns: minmax(260px, 320px) 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+@media (max-width: 720px) {
+  main {
+    grid-template-columns: 1fr;
+  }
+}
+
+.panel-formulario,
+.panel-lista {
+  background: #fff;
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+}
+
+form label {
+  display: block;
+  margin-top: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.acciones-formulario {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  background: var(--color-primario);
+  color: #fff;
+}
+
+button:hover {
+  background: var(--color-primario-oscuro);
+}
+
+button.secundario {
+  background: #6b7280;
+}
+
+button.peligro {
+  background: var(--color-peligro);
+}
+
+.mensaje-error {
+  color: var(--color-peligro);
+  margin-top: 0.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.75rem;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--color-borde);
+  font-size: 0.9rem;
+  vertical-align: top;
+}
+
+select.estado-select {
+  width: auto;
+  margin: 0;
+  padding: 0.25rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badge-alta {
+  background: #fee2e2;
+  color: var(--color-peligro);
+}
+
+.badge-media {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-baja {
+  background: #dcfce7;
+  color: var(--color-exito);
+}
+
+.fila-acciones {
+  display: flex;
+  gap: 0.4rem;
+}
