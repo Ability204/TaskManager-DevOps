@@ -106,6 +106,17 @@ def create_app(database_path=DATABASE):
         fila = db().execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
         return jsonify(dict(fila))
 
+    # RF04 - Eliminar tareas: eliminar tareas existentes.
+    @app.route("/api/tareas/<int:tarea_id>", methods=["DELETE"])
+    def eliminar_tarea(tarea_id):
+        fila = db().execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
+        if fila is None:
+            return jsonify({"error": "Tarea no encontrada."}), 404
+
+        db().execute("DELETE FROM tareas WHERE id = ?", (tarea_id,))
+        db().commit()
+        return jsonify({"ok": True})
+
     # RF05 - Cambiar estado: cambiar entre pendiente, en proceso y terminada.
     @app.route("/api/tareas/<int:tarea_id>/estado", methods=["PATCH"])
     def cambiar_estado(tarea_id):
