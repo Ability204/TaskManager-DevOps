@@ -5,6 +5,7 @@ from flask import Flask, g, jsonify, render_template, request
 
 DATABASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "tareas.db")
 
+ESTADOS_VALIDOS = {"Pendiente", "En proceso", "Terminada"}
 PRIORIDADES_VALIDAS = {"Alta", "Media", "Baja"}
 
 
@@ -78,6 +79,49 @@ def create_app(database_path=DATABASE):
         db().commit()
         fila = db().execute("SELECT * FROM tareas WHERE id = ?", (cursor.lastrowid,)).fetchone()
         return jsonify(dict(fila)), 201
+
+    # RF03 - Editar tareas: modificar la información de una tarea.
+    @app.route("/api/tareas/<int:tarea_id>", methods=["PUT"])
+    def editar_tarea(tarea_id):
+        fila = db().execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
+        if fila is None:
+            return jsonify({"error": "Tarea no encontrada."}), 404
+
+        datos = request.get_json(silent=True) or {}
+        nombre = (datos.get("nombre", fila["nombre"]) or "").strip()
+        if not nombre:
+            return jsonify({"error": "El nombre de la tarea es obligatorio."}), 400
+
+        prioridad = datos.get("prioridad", fila["prioridad"])
+        if prioridad not in PRIORIDADES_VALIDAS:
+            return jsonify({"error": "Prioridad inválida."}), 400
+
+        descripcion = datos.get("descripcion", fila["descripcion"])
+
+        db().execute(
+            "UPDATE tareas SET nombre = ?, descripcion = ?, prioridad = ? WHERE id = ?",
+            (nombre, descripcion, prioridad, tarea_id),
+        )
+        db().commit()
+        fila = db().execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
+        return jsonify(dict(fila))
+
+    # RF05 - Cambiar estado: cambiar entre pendiente, en proceso y terminada.
+    @app.route("/api/tareas/<int:tarea_id>/estado", methods=["PATCH"])
+    def cambiar_estado(tarea_id):
+        fila = db().execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
+        if fila is None:
+            return jsonify({"error": "Tarea no encontrada."}), 404
+
+        datos = request.get_json(silent=True) or {}
+        estado = datos.get("estado")
+        if estado not in ESTADOS_VALIDOS:
+            return jsonify({"error": "Estado inválido."}), 400
+
+        db().execute("UPDATE tareas SET estado = ? WHERE id = ?", (estado, tarea_id))
+        db().commit()
+        fila = db().execute("SELECT * FROM tareas WHERE id = ?", (tarea_id,)).fetchone()
+        return jsonify(dict(fila))
 
     return app
 
