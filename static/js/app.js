@@ -46,6 +46,7 @@ function renderizarTareas(tareas) {
       </td>
       <td class="fila-acciones">
         <button type="button" class="secundario btn-editar" data-id="${tarea.id}">Editar</button>
+        <button type="button" class="peligro btn-eliminar" data-id="${tarea.id}">Eliminar</button>
       </td>
     `;
     cuerpoTabla.appendChild(fila);
@@ -97,21 +98,31 @@ botonCancelar.addEventListener("click", () => {
 });
 
 cuerpoTabla.addEventListener("click", async (evento) => {
-  const boton = evento.target.closest(".btn-editar");
+  const boton = evento.target.closest("button");
   if (!boton) return;
   const id = boton.dataset.id;
 
-  const respuesta = await fetch("/api/tareas");
-  const tareas = await respuesta.json();
-  const tarea = tareas.find((t) => String(t.id) === String(id));
-  if (!tarea) return;
+  if (boton.classList.contains("btn-eliminar")) {
+    const confirmado = confirm("¿Eliminar esta tarea?");
+    if (!confirmado) return;
+    await fetch(`/api/tareas/${id}`, { method: "DELETE" });
+    await obtenerTareas();
+    return;
+  }
 
-  campoId.value = tarea.id;
-  campoNombre.value = tarea.nombre;
-  campoDescripcion.value = tarea.descripcion;
-  campoPrioridad.value = tarea.prioridad;
-  formTitulo.textContent = `Editar tarea #${tarea.id}`;
-  botonCancelar.hidden = false;
+  if (boton.classList.contains("btn-editar")) {
+    const respuesta = await fetch("/api/tareas");
+    const tareas = await respuesta.json();
+    const tarea = tareas.find((t) => String(t.id) === String(id));
+    if (!tarea) return;
+
+    campoId.value = tarea.id;
+    campoNombre.value = tarea.nombre;
+    campoDescripcion.value = tarea.descripcion;
+    campoPrioridad.value = tarea.prioridad;
+    formTitulo.textContent = `Editar tarea #${tarea.id}`;
+    botonCancelar.hidden = false;
+  }
 });
 
 cuerpoTabla.addEventListener("change", async (evento) => {
