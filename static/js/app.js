@@ -1,7 +1,10 @@
 const formulario = document.getElementById("form-tarea");
+const campoId = document.getElementById("tarea-id");
 const campoNombre = document.getElementById("nombre");
 const campoDescripcion = document.getElementById("descripcion");
 const campoPrioridad = document.getElementById("prioridad");
+const botonCancelar = document.getElementById("btn-cancelar");
+const formTitulo = document.getElementById("form-titulo");
 const mensajeError = document.getElementById("mensaje-error");
 const cuerpoTabla = document.getElementById("cuerpo-tabla");
 const mensajeVacio = document.getElementById("mensaje-vacio");
@@ -34,10 +37,28 @@ function renderizarTareas(tareas) {
       <td>${escaparHtml(tarea.nombre)}</td>
       <td>${escaparHtml(tarea.descripcion || "")}</td>
       <td>${badgePrioridad(tarea.prioridad)}</td>
-      <td>${escaparHtml(tarea.estado)}</td>
+      <td>
+        <select class="estado-select" data-id="${tarea.id}">
+          <option value="Pendiente" ${tarea.estado === "Pendiente" ? "selected" : ""}>Pendiente</option>
+          <option value="En proceso" ${tarea.estado === "En proceso" ? "selected" : ""}>En proceso</option>
+          <option value="Terminada" ${tarea.estado === "Terminada" ? "selected" : ""}>Terminada</option>
+        </select>
+      </td>
+      <td class="fila-acciones">
+        <button type="button" class="secundario btn-editar" data-id="${tarea.id}">Editar</button>
+      </td>
     `;
     cuerpoTabla.appendChild(fila);
   }
+}
+
+function limpiarFormulario() {
+  campoId.value = "";
+  formulario.reset();
+  campoPrioridad.value = "Media";
+  formTitulo.textContent = "Nueva tarea";
+  botonCancelar.hidden = true;
+  mensajeError.hidden = true;
 }
 
 formulario.addEventListener("submit", async (evento) => {
@@ -50,8 +71,12 @@ formulario.addEventListener("submit", async (evento) => {
     prioridad: campoPrioridad.value,
   };
 
-  const respuesta = await fetch("/api/tareas", {
-    method: "POST",
+  const id = campoId.value;
+  const url = id ? `/api/tareas/${id}` : "/api/tareas";
+  const metodo = id ? "PUT" : "POST";
+
+  const respuesta = await fetch(url, {
+    method: metodo,
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(cuerpo),
   });
@@ -63,8 +88,42 @@ formulario.addEventListener("submit", async (evento) => {
     return;
   }
 
-  formulario.reset();
-  campoPrioridad.value = "Media";
+  limpiarFormulario();
+  await obtenerTareas();
+});
+
+botonCancelar.addEventListener("click", () => {
+  limpiarFormulario();
+});
+
+cuerpoTabla.addEventListener("click", async (evento) => {
+  const boton = evento.target.closest(".btn-editar");
+  if (!boton) return;
+  const id = boton.dataset.id;
+
+  const respuesta = await fetch("/api/tareas");
+  const tareas = await respuesta.json();
+  const tarea = tareas.find((t) => String(t.id) === String(id));
+  if (!tarea) return;
+
+  campoId.value = tarea.id;
+  campoNombre.value = tarea.nombre;
+  campoDescripcion.value = tarea.descripcion;
+  campoPrioridad.value = tarea.prioridad;
+  formTitulo.textContent = `Editar tarea #${tarea.id}`;
+  botonCancelar.hidden = false;
+});
+
+cuerpoTabla.addEventListener("change", async (evento) => {
+  const select = evento.target.closest(".estado-select");
+  if (!select) return;
+
+  await fetch(`/api/tareas/${select.dataset.id}/estado`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ estado: select.value }),
+  });
+
   await obtenerTareas();
 });
 
