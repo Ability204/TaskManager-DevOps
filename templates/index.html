@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaskManager</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+  <header>
+    <h1>TaskManager</h1>
+    <p>Sistema web para la gestión de tareas de TechSolutions</p>
+  </header>
+
+  <main>
+    <section class="panel-formulario">
+      <h2>Nueva tarea</h2>
+      <form id="form-tarea">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required />
+
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion"></textarea>
+
+        <label for="prioridad">Prioridad</label>
+        <select id="prioridad" name="prioridad">
+          <option value="Alta">Alta</option>
+          <option value="Media" selected>Media</option>
+          <option value="Baja">Baja</option>
+        </select>
+
+        <div class="acciones-formulario">
+          <button type="submit" id="btn-guardar">Guardar tarea</button>
+        </div>
+        <p id="mensaje-error" class="mensaje-error" hidden></p>
+      </form>
+    </section>
+
+    <section class="panel-lista">
+      <h2>Tareas registradas</h2>
+      <p id="mensaje-vacio" hidden>No hay tareas registradas todavía.</p>
+      <table id="tabla-tareas">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpo-tabla"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
