@@ -2,6 +2,10 @@
 
 Sistema web para la gestión de tareas.
 
+🔗 **Aplicación en vivo:** https://taskmanager-devops-e1w8.onrender.com
+📋 **Tablero de Projects:** https://github.com/users/Ability204/projects/1
+🏷️ **Release v1.0.0:** https://github.com/Ability204/TaskManager-DevOps/releases/tag/v1.0.0
+
 Proyecto desarrollado para la empresa ficticia **TechSolutions**, que necesita
 reemplazar sus hojas de cálculo por una aplicación web centralizada para
 registrar, consultar, editar, eliminar, cambiar el estado y priorizar tareas.

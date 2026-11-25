@@ -19,8 +19,13 @@
 | 9 | Implementar las pruebas unitarias | Test | Alta | 4 | Done |
 | 10 | Configurar GitHub Actions (CI) | Build | Alta | 3 | Done |
 | 11 | Configurar GitHub Actions (CD) y Release v1.0.0 | Release | Media | 2 | Done |
-| 12 | Configurar despliegue en la nube | Deploy | Alta | 3 | Pendiente |
-| 13 | Configurar monitoreo y registro de incidencias | Operate | Media | 2 | Pendiente |
+| 12 | Configurar despliegue en la nube | Deploy | Alta | 3 | Done |
+| 13 | Configurar monitoreo y registro de incidencias | Operate | Media | 2 | In Progress |
+
+Repositorio: https://github.com/Ability204/TaskManager-DevOps · Tablero de
+Projects: https://github.com/users/Ability204/projects/1 · Release v1.0.0:
+https://github.com/Ability204/TaskManager-DevOps/releases/tag/v1.0.0 ·
+Aplicación publicada: https://taskmanager-devops-e1w8.onrender.com
 
 ## Comandos sugeridos para crearlos con GitHub CLI
 
